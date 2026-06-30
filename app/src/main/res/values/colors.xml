@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fintech_primary">#0D47A1</color> <color name="fintech_secondary">#1976D2</color> <color name="fintech_background">#F5F7FA</color> <color name="qa_error">#D32F2F</color> <color name="success_green">#388E3C</color> <color name="text_dark">#212121</color> <color name="white">#FFFFFF</color>
+</resources>
