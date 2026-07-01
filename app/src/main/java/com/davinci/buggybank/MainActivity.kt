@@ -1,5 +1,6 @@
 package com.davinci.buggybank
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvLoginError: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState: Bundle?)
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
@@ -57,11 +58,17 @@ class MainActivity : AppCompatActivity() {
                 // Éxito: Ocultamos el error si pasa los filtros de QA
                 tvLoginError.visibility = View.GONE
 
-                // TODO: En el Parcial 2 acá implementaremos Firebase Auth y el pasaje de datos
-                // Por ahora podemos limpiar los campos o simular el ingreso exitoso
+                // 4. Mostrar mensaje de éxito en la interfaz
                 tvLoginError.text = "¡Validación de QA aprobada! Ingresando..."
                 tvLoginError.setTextColor(resources.getColor(R.color.success_green, theme))
                 tvLoginError.visibility = View.VISIBLE
+
+                // 5. NAVEGACIÓN: Viajar desde esta pantalla hacia el Dashboard Financiero
+                val intent = Intent(this, DashboardActivity::class.java)
+                startActivity(intent)
+
+                // 6. Cerramos el Login para que no se pueda volver atrás al estar logueado
+                finish()
             }
         }
     }
