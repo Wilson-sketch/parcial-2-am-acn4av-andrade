@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "448712786119",
+    "project_id": "buggybank-davinci",
+    "storage_bucket": "buggybank-davinci.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448712786119:android:e4be8e42b935ff70cc7ee2",
+        "android_client_info": {
+          "package_name": "com.davinci.buggybank"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtesC7OP9SpIztofAQomygrnj9k0sNO3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

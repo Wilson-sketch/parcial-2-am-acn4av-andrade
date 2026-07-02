@@ -10,14 +10,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+// Usamos la importación base que no depende de KTX
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
-    // Declaración de variables para los componentes de la interfaz
+    // Componentes de la interfaz
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var tvLoginError: TextView
+
+    // Variable para controlar Firebase Auth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,45 +35,48 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // 1. Inicializar los componentes vinculándolos con sus IDs del XML
+        // Inicialización estándar compatible con todas las versiones de SDK
+        auth = FirebaseAuth.getInstance()
+
+        // Inicializar componentes vinculándolos con el XML
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         btnLogin = findViewById(R.id.btnLogin)
         tvLoginError = findViewById(R.id.tvLoginError)
 
-        // 2. Configurar el evento de escucha del clic para el botón de ingreso
+        // Configurar el click del botón
         btnLogin.setOnClickListener {
             val emailText = etEmail.text.toString().trim()
             val passwordText = etPassword.text.toString().trim()
 
-            // 3. Lógica de Validación (Estilo Sandbox de QA)
+            // 1. Validaciones previas de formato (QA Sandbox)
             if (emailText.isEmpty() || passwordText.isEmpty()) {
-                // Caso de prueba: Campos vacíos
                 tvLoginError.text = "Error: Todos los campos son obligatorios"
                 tvLoginError.visibility = View.VISIBLE
             } else if (!emailText.contains("@") || !emailText.contains(".")) {
-                // Caso de prueba: Formato de correo inválido
-                tvLoginError.text = "Error de formato: Ingrese un email válido (ej: usuario@banco.com)"
+                tvLoginError.text = "Error de formato: Ingrese un email válido"
                 tvLoginError.visibility = View.VISIBLE
             } else if (passwordText.length < 6) {
-                // Caso de prueba: Contraseña muy corta/vulnerable
-                tvLoginError.text = "Error de seguridad: La clave debe tener al menos 6 caracteres"
+                tvLoginError.text = "Error de seguridad: Mínimo 6 caracteres"
                 tvLoginError.visibility = View.VISIBLE
             } else {
-                // Éxito: Ocultamos el error si pasa los filtros de QA
+                // Ocultamos errores previos
                 tvLoginError.visibility = View.GONE
 
-                // 4. Mostrar mensaje de éxito en la interfaz
-                tvLoginError.text = "¡Validación de QA aprobada! Ingresando..."
-                tvLoginError.setTextColor(resources.getColor(R.color.success_green, theme))
-                tvLoginError.visibility = View.VISIBLE
-
-                // 5. NAVEGACIÓN: Viajar desde esta pantalla hacia el Dashboard Financiero
-                val intent = Intent(this, DashboardActivity::class.java)
-                startActivity(intent)
-
-                // 6. Cerramos el Login para que no se pueda volver atrás al estar logueado
-                finish()
+                // 2. LOGIC REAL CON FIREBASE AUTH (Instancia estándar)
+                auth.signInWithEmailAndPassword(emailText, passwordText)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            // Éxito: Navegamos al Dashboard Financiero
+                            val intent = Intent(this, DashboardActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            // Falló: El usuario no existe o la contraseña es incorrecta
+                            tvLoginError.text = "Error de autenticación: Credenciales inválidas o usuario inexistente"
+                            tvLoginError.visibility = View.VISIBLE
+                        }
+                    }
             }
         }
     }
